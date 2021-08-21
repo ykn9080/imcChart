@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import _ from "lodash";
-import "components/Common/Antd.css";
+import "./components/Common/Antd.css";
 import axios from "axios";
-import { globalVariable } from "actions";
-import { currentsetting } from "components/functions/config";
 import {
   Typography,
   Row,
@@ -21,21 +18,21 @@ import {
 } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
 import AntFormDisplay from "imcformbuilder";
-import formdt from "Model/AntFormDisplay.json";
-import Dataget from "Model/Author/Dataget";
-import PieChart from "Model/Chart/antv/PieChart";
-import BarChart from "Model/Chart/antv/BarChart";
-import LineChart from "Model/Chart/antv/LineChart";
-import ColumnChart from "Model/Chart/antv/ColumnChart";
-import BoxPlot from "Model/Chart/antv/BoxPlot";
-import ScatterPlot from "Model/Chart/antv/ScatterPlot";
-import MatrixDiagram from "Model/Chart/antv/MatrixDiagram";
-import AreaChart from "Model/Chart/antv/AreaChart";
-import Treemap from "Model/Chart/d3/Treemap";
-import treemapdata from "Model/Chart/d3/treemapData";
-import ChartOption from "Model/Author/AuthorOption";
+import formdt from "./AntFormDisplay.json";
+// import Dataget from "Model/Author/Dataget";
+import PieChart from "./ChartTools/antv/PieChart";
+import BarChart from "./ChartTools/antv/BarChart";
+import LineChart from "./ChartTools/antv/LineChart";
+import ColumnChart from "./ChartTools/antv/ColumnChart";
+import BoxPlot from "./ChartTools/antv/BoxPlot";
+import ScatterPlot from "./ChartTools/antv/ScatterPlot";
+import MatrixDiagram from "./ChartTools/antv/MatrixDiagram";
+import AreaChart from "./ChartTools/antv/AreaChart";
+import Treemap from "./ChartTools/d3/Treemap";
+import treemapdata from "./ChartTools/d3/treemapData";
+// import ChartOption from "Model/Author/AuthorOption";
 import { ErrorBoundary } from "react-error-boundary";
-import { DarkBackground } from "Model/Author/Dataget";
+import styled, { css } from "styled-components";
 
 function ErrorFallback({ error, resetErrorBoundary }) {
   return (
@@ -55,8 +52,7 @@ const { Title } = Typography;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
 
-const AuthorChart = ({ authObj, edit, errorurl }) => {
-  const dispatch = useDispatch();
+const EasyChart = ({ authObj, edit, errorurl }) => {
   const [form] = Form.useForm();
 
   const [data, setData] = useState();
@@ -70,11 +66,8 @@ const AuthorChart = ({ authObj, edit, errorurl }) => {
   const [chartOpt, setChartOpt] = useState("");
   const [charttypeopt, setCharttypeopt] = useState();
   const [loading, setLoading] = useState(false);
-  const tempModel = useSelector((state) => state.global.tempModel);
-  const trigger = useSelector((state) => state.global.triggerChild);
 
   useEffect(() => {
-    dispatch(globalVariable({ helpLink: "/edit/graph?type=chart" }));
     localStorage.removeItem("modelchart");
   }, []);
   useEffect(() => {
@@ -141,7 +134,7 @@ const AuthorChart = ({ authObj, edit, errorurl }) => {
       return null;
     });
     //formid axios.get
-    let url = `${currentsetting.webserviceprefix}bootform/5f1a590712d3bf549d18e583`;
+    let url = `bootform/5f1a590712d3bf549d18e583`;
 
     axios.get(url).then((rsp) => {
       let flist = [];
@@ -204,59 +197,59 @@ const AuthorChart = ({ authObj, edit, errorurl }) => {
 
     chartchart(setting1, listx);
   };
-  const saveTemp = (trigger) => {
-    let authorlist = tempModel?.properties?.resultsAuthor;
-    if (trigger.length > 0 && trigger[0] === "save") {
-      let datanew = { ...data };
-      let mdtb = localStorage.getItem("modelchart");
-      let set = { patchlist: patch };
-      set = setting1;
-      if (mdtb) {
-        mdtb = JSON.parse(mdtb);
-        set = { ...setting1, ...mdtb };
-        setSetting1(set);
-        localStorage.removeItem("modelchart");
-      }
+  // const saveTemp = (trigger) => {
+  //   let authorlist = tempModel?.properties?.resultsAuthor;
+  //   if (trigger.length > 0 && trigger[0] === "save") {
+  //     let datanew = { ...data };
+  //     let mdtb = localStorage.getItem("modelchart");
+  //     let set = { patchlist: patch };
+  //     set = setting1;
+  //     if (mdtb) {
+  //       mdtb = JSON.parse(mdtb);
+  //       set = { ...setting1, ...mdtb };
+  //       setSetting1(set);
+  //       localStorage.removeItem("modelchart");
+  //     }
 
-      let dtsrc = localStorage.getItem("modeldtsrc");
-      if (dtsrc) {
-        dtsrc = JSON.parse(dtsrc);
-        set = { ...set, ...dtsrc };
-        localStorage.removeItem("modeldtsrc");
-      }
+  //     let dtsrc = localStorage.getItem("modeldtsrc");
+  //     if (dtsrc) {
+  //       dtsrc = JSON.parse(dtsrc);
+  //       set = { ...set, ...dtsrc };
+  //       localStorage.removeItem("modeldtsrc");
+  //     }
 
-      if (chartOpt && chartOpt !== "") {
-        console.log(chartOpt);
-        set = { ...set, options: JSON.parse(chartOpt) };
-      } else if (set?.options) {
-        delete set.options;
-      }
+  //     if (chartOpt && chartOpt !== "") {
+  //       console.log(chartOpt);
+  //       set = { ...set, options: JSON.parse(chartOpt) };
+  //     } else if (set?.options) {
+  //       delete set.options;
+  //     }
 
-      // if (!datanew.id) {
-      //   datanew = { ...datanew, id: idMake(), type: "chart" };
-      // }
-      datanew = {
-        ...datanew,
-        dtlist: filterlist,
-        setting: set,
-      };
-      //delete datanew.nodelist;
-      let notexist = true;
-      authorlist.map((k, j) => {
-        if (k.i === datanew.i) {
-          authorlist.splice(j, 1, datanew);
-          notexist = false;
-        }
-        return null;
-      });
-      if (notexist) authorlist.push(datanew);
-      tempModel.properties.resultsAuthor = authorlist;
+  //     // if (!datanew.id) {
+  //     //   datanew = { ...datanew, id: idMake(), type: "chart" };
+  //     // }
+  //     datanew = {
+  //       ...datanew,
+  //       dtlist: filterlist,
+  //       setting: set,
+  //     };
+  //     //delete datanew.nodelist;
+  //     let notexist = true;
+  //     authorlist.map((k, j) => {
+  //       if (k.i === datanew.i) {
+  //         authorlist.splice(j, 1, datanew);
+  //         notexist = false;
+  //       }
+  //       return null;
+  //     });
+  //     if (notexist) authorlist.push(datanew);
+  //     tempModel.properties.resultsAuthor = authorlist;
 
-      dispatch(globalVariable({ tempModel }));
-      dispatch(globalVariable({ triggerChild: [] }));
-    }
-  };
-  saveTemp(trigger);
+  //     dispatch(globalVariable({ tempModel }));
+  //     dispatch(globalVariable({ triggerChild: [] }));
+  //   }
+  // };
+  // saveTemp(trigger);
 
   const onValuesChangeTable1 = (changedValues, allValues) => {
     //allValues = cleanupObj(changedValues, allValues);
@@ -464,7 +457,7 @@ const AuthorChart = ({ authObj, edit, errorurl }) => {
           </Col>
         )}
       </Row>
-      <div>
+      {/* <div>
         {edit && setting1 && setting1.charttype && (
           <ChartOption
             // type={setting1.charttype}
@@ -473,7 +466,7 @@ const AuthorChart = ({ authObj, edit, errorurl }) => {
             onOptionClick={onOptionClick}
           />
         )}
-      </div>
+      </div> */}
     </div>
   );
 
@@ -556,24 +549,11 @@ const AuthorChart = ({ authObj, edit, errorurl }) => {
                       <div style={{ marginRight: 10 }}>{form1}</div>
                     </TabPane>
                   </Tabs>
-
-                  <Button
-                    onClick={() => {
-                      console.log(
-                        tempModel,
-                        nodelist,
-                        filterlist,
-                        chartOrigin()
-                      );
-                    }}
-                  >
-                    tempModel,nodelist,filterlist,chartOrigin
-                  </Button>
                 </>
               </TabPane>
-              <TabPane tab="Data" key="2">
+              {/* <TabPane tab="Data" key="2">
                 <Dataget onDataGet={onDataGet} dtsrc={dtsrc} />
-              </TabPane>
+              </TabPane> */}
             </Tabs>
           </>
         ) : (
@@ -597,4 +577,22 @@ export const CleanupObj = (obj) => {
 
   return obj;
 };
-export default AuthorChart;
+export const DarkBackground = styled.div`
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 999; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+
+  ${(props) =>
+    props.disappear &&
+    css`
+      display: block; /* show */
+    `}
+`;
+export default EasyChart;
