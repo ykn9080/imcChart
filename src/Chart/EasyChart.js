@@ -13,7 +13,6 @@ import {
   Input,
   Form,
   Tooltip,
-  Result,
   Spin,
 } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
@@ -30,23 +29,8 @@ import MatrixDiagram from "./ChartTools/antv/MatrixDiagram";
 import AreaChart from "./ChartTools/antv/AreaChart";
 import Treemap from "./ChartTools/d3/Treemap";
 import treemapdata from "./ChartTools/d3/treemapData";
-// import ChartOption from "Model/Author/AuthorOption";
-import { ErrorBoundary } from "react-error-boundary";
+import ChartOption from "./ChartOptions";
 import styled, { css } from "styled-components";
-
-function ErrorFallback({ error, resetErrorBoundary }) {
-  return (
-    <div role="alert">
-      <pre>{error.message}</pre>
-      {/* <button onClick={resetErrorBoundary}>Try again</button> */}
-      <Result
-        status="500"
-        title="500"
-        subTitle="Sorry, something went wrong."
-      />
-    </div>
-  );
-}
 
 const { Title } = Typography;
 const { TabPane } = Tabs;
@@ -87,7 +71,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
         setCharttypeopt(ds.charttype);
         //AntFormDisplay init
         setInitChart(ds); //initialValues
-        //setPatch(ds.patchlist);//Dropdown patchlist
+        setPatch(ds.patchlist); //Dropdown patchlist
 
         //dataget init
         let src = {};
@@ -381,13 +365,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     }, 100);
   };
 
-  const myErrorHandler = (error, info) => {
-    //window.location.reload(false);
-    if (errorurl) window.location.href = errorurl;
-    else window.location.reload(false);
-    // Do something with the error
-    // E.g. log to an error logging client here
-  };
   const chtonly = (
     <div id="dvCht" style={{ display: "block" }}>
       <Row gutter={4}>
@@ -435,9 +412,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
                     );
                   default:
                     return null;
-                  // <div style={{ margin: 20, marginRight: 7 }}>
-                  //   <Rechart data={filterlist} {...setting1} aspect={1.6} />
-                  // </div>
                 }
               })()}
           </div>
@@ -445,28 +419,25 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
         {edit && (
           <Col span={10}>
             <div style={{ marginTop: 10, marginRight: 5 }}>
-              {patch && (
-                <AntFormDisplay
-                  formArray={formdt["5f1a590712d3bf549d18e583"]}
-                  onValuesChange={onValuesChangeTable1}
-                  patchlist={patch}
-                  initialValues={initChart}
-                />
-              )}
+              <AntFormDisplay
+                formArray={formdt["5f1a590712d3bf549d18e583"]}
+                onValuesChange={onValuesChangeTable1}
+                patchlist={patch}
+                initialValues={initChart}
+              />
             </div>
           </Col>
         )}
       </Row>
-      {/* <div>
+      <div>
         {edit && setting1 && setting1.charttype && (
           <ChartOption
-            // type={setting1.charttype}
             type={charttypeopt}
             config={chartOrigin()}
             onOptionClick={onOptionClick}
           />
         )}
-      </div> */}
+      </div>
     </div>
   );
 
@@ -530,36 +501,34 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
 
   return (
     <>
-      <ErrorBoundary FallbackComponent={ErrorFallback} onError={myErrorHandler}>
-        {edit ? (
-          <>
-            <Tabs tabPosition={"left"}>
-              <TabPane tab="Author">
-                <>
-                  <Title level={4}>Chart</Title>
-                  <Divider style={{ marginTop: 0 }} />
-                  <Tabs size="small">
-                    <TabPane tab="Chart" key="1">
-                      {chtonly}
-                    </TabPane>
-                    <TabPane tab="Table" key="2">
-                      {tbonly}
-                    </TabPane>
-                    <TabPane tab="Config" key="3">
-                      <div style={{ marginRight: 10 }}>{form1}</div>
-                    </TabPane>
-                  </Tabs>
-                </>
-              </TabPane>
-              {/* <TabPane tab="Data" key="2">
+      {edit ? (
+        <>
+          <Tabs tabPosition={"left"}>
+            <TabPane tab="Author">
+              <>
+                <Title level={4}>Chart</Title>
+                <Divider style={{ marginTop: 0 }} />
+                <Tabs size="small">
+                  <TabPane tab="Chart" key="1">
+                    {chtonly}
+                  </TabPane>
+                  <TabPane tab="Table" key="2">
+                    {tbonly}
+                  </TabPane>
+                  <TabPane tab="Config" key="3">
+                    <div style={{ marginRight: 10 }}>{form1}</div>
+                  </TabPane>
+                </Tabs>
+              </>
+            </TabPane>
+            {/* <TabPane tab="Data" key="2">
                 <Dataget onDataGet={onDataGet} dtsrc={dtsrc} />
-              </TabPane> */}
-            </Tabs>
-          </>
-        ) : (
-          <div style={{ marginTop: 100 }}>{chtonly}</div>
-        )}
-      </ErrorBoundary>
+              </TabPane>  */}
+          </Tabs>
+        </>
+      ) : (
+        <div style={{ marginTop: 100 }}>{chtonly}</div>
+      )}
       <DarkBackground disappear={loading}>
         <div style={{ position: "absolute", top: 200, left: "50%" }}>
           <Spin spinning={loading} />
