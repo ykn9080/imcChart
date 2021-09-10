@@ -55,6 +55,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     localStorage.removeItem("modelchart");
   }, []);
   useEffect(() => {
+    console.log(authObj);
     if (authObj) {
       setLoading(true);
       setData(authObj);
@@ -67,6 +68,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       }
       if (authObj.setting) {
         const ds = authObj.setting;
+        localStorage.setItem("modelchart", JSON.stringify(authObj));
         setSetting1(ds);
         setCharttypeopt(ds.charttype);
         //AntFormDisplay init
@@ -85,6 +87,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
         if (ds.options) {
           const optt = JSON.stringify(ds.options, null, 4);
           setChartOpt(optt);
+
           form.setFieldsValue({
             textarea: optt,
           });
@@ -181,59 +184,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
 
     chartchart(setting1, listx);
   };
-  // const saveTemp = (trigger) => {
-  //   let authorlist = tempModel?.properties?.resultsAuthor;
-  //   if (trigger.length > 0 && trigger[0] === "save") {
-  //     let datanew = { ...data };
-  //     let mdtb = localStorage.getItem("modelchart");
-  //     let set = { patchlist: patch };
-  //     set = setting1;
-  //     if (mdtb) {
-  //       mdtb = JSON.parse(mdtb);
-  //       set = { ...setting1, ...mdtb };
-  //       setSetting1(set);
-  //       localStorage.removeItem("modelchart");
-  //     }
-
-  //     let dtsrc = localStorage.getItem("modeldtsrc");
-  //     if (dtsrc) {
-  //       dtsrc = JSON.parse(dtsrc);
-  //       set = { ...set, ...dtsrc };
-  //       localStorage.removeItem("modeldtsrc");
-  //     }
-
-  //     if (chartOpt && chartOpt !== "") {
-  //       console.log(chartOpt);
-  //       set = { ...set, options: JSON.parse(chartOpt) };
-  //     } else if (set?.options) {
-  //       delete set.options;
-  //     }
-
-  //     // if (!datanew.id) {
-  //     //   datanew = { ...datanew, id: idMake(), type: "chart" };
-  //     // }
-  //     datanew = {
-  //       ...datanew,
-  //       dtlist: filterlist,
-  //       setting: set,
-  //     };
-  //     //delete datanew.nodelist;
-  //     let notexist = true;
-  //     authorlist.map((k, j) => {
-  //       if (k.i === datanew.i) {
-  //         authorlist.splice(j, 1, datanew);
-  //         notexist = false;
-  //       }
-  //       return null;
-  //     });
-  //     if (notexist) authorlist.push(datanew);
-  //     tempModel.properties.resultsAuthor = authorlist;
-
-  //     dispatch(globalVariable({ tempModel }));
-  //     dispatch(globalVariable({ triggerChild: [] }));
-  //   }
-  // };
-  // saveTemp(trigger);
 
   const onValuesChangeTable1 = (changedValues, allValues) => {
     //allValues = cleanupObj(changedValues, allValues);
@@ -245,12 +195,19 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       setCharttypeopt(null);
       setTimeout(function () {
         setCharttypeopt(set2.charttype);
+        updateLocalStorage("modelchart", {});
       }, 0);
     }
-    setSetting1(set2);
+    console.log(changedValues);
+    if (["title", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
+      setSetting1(set2);
 
     //use localstorage to prevent state change
-    localStorage.setItem("modelchart", JSON.stringify(allValues));
+    let local = {},
+      local1 = localStorage.getItem("modelchart");
+    if (local1) local = JSON.parse(local1);
+    local.setting = { ...local.setting, ...changedValues };
+    localStorage.setItem("modelchart", JSON.stringify(local));
   };
 
   // chart Data conversion
@@ -336,7 +293,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
   };
 
   const onOptionClick = (opt) => {
-    console.log(opt);
+    console.log("here", opt);
     let optt = " ";
     let settingg = { ...setting1 };
     const chart1 = setting1.charttype;
@@ -348,6 +305,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       textarea: optt,
     });
     setChartOpt(optt);
+    updateLocalStorage("modelchart", { options: opt });
     setConfig({ ...chartOrigin(), ...opt });
     setTimeout(function () {
       setSetting1({ ...setting1, charttype: chart1 });
@@ -359,6 +317,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     setTimeout(function () {
       setSetting1({ ...setting1, charttype: chart1 });
       setChartOpt("");
+      updateLocalStorage("modelchart", {});
       form.setFieldsValue({
         textarea: "",
       });
@@ -366,7 +325,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
   };
 
   const chtonly = (
-    <div id="dvCht" style={{ display: "block" }}>
+    <div id="dvCht">
       <Row gutter={4}>
         <Col span={edit ? 14 : 24}>
           <div
@@ -418,7 +377,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
         </Col>
         {edit && (
           <Col span={10}>
-            <div style={{ marginTop: 10, marginRight: 5 }}>
+            <div>
               <AntFormDisplay
                 formArray={formdt["5f1a590712d3bf549d18e583"]}
                 onValuesChange={onValuesChangeTable1}
@@ -429,18 +388,29 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
           </Col>
         )}
       </Row>
-      <div>
-        {edit && setting1 && setting1.charttype && (
-          <ChartOption
-            type={charttypeopt}
-            config={chartOrigin()}
-            onOptionClick={onOptionClick}
-          />
-        )}
-      </div>
+
+      {edit && setting1 && setting1.charttype && (
+        <ChartOption
+          type={charttypeopt}
+          config={chartOrigin()}
+          onOptionClick={onOptionClick}
+        />
+      )}
     </div>
   );
+  const updateLocalStorage = (title, updateObj) => {
+    let local,
+      local1 = localStorage.getItem(title);
+    if (local1) local = JSON.parse(local1);
+    local.setting = { ...local.setting, ...updateObj };
 
+    //updateObj==={}, remove options
+    if ((Object.keys(updateObj).length === 0) | !updateObj.options) {
+      delete local.setting.options;
+      form.resetFields();
+    }
+    localStorage.setItem(title, JSON.stringify(local));
+  };
   const makeTableColumn = (datalist) => {
     let col = [];
     if (datalist && datalist.length > 0)
@@ -464,7 +434,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
   const onConfigFinish = (val) => {
     // console.log(val);
     setChartOpt(val.textarea);
-
+    updateLocalStorage("modelchart", { options: val.textarea });
     reloadChart();
   };
   // const onReset = () => {
@@ -488,6 +458,8 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
           onClick={() => {
             form.resetFields();
             setChartOpt("");
+
+            updateLocalStorage("modelchart", {});
           }}
         >
           Reset
@@ -498,7 +470,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       </Form.Item>
     </Form>
   );
-
   return (
     <>
       {edit ? (
