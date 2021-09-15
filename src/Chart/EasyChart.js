@@ -35,6 +35,7 @@ import styled, { css } from "styled-components";
 const { Title } = Typography;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
+const formArray = formdt["5f1a590712d3bf549d18e583"];
 
 const EasyChart = ({ authObj, edit, errorurl }) => {
   const [form] = Form.useForm();
@@ -73,7 +74,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
         setCharttypeopt(ds.charttype);
         //AntFormDisplay init
         setInitChart(ds); //initialValues
-        setPatch(ds.patchlist); //Dropdown patchlist
+        if (ds.patchlist) setPatch(ds.patchlist); //Dropdown patchlist
 
         //dataget init
         let src = {};
@@ -120,24 +121,21 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       oparr.push({ value: k, text: k.charAt(0).toUpperCase() + k.slice(1) });
       return null;
     });
-    //formid axios.get
-    let url = `bootform/5f1a590712d3bf549d18e583`;
 
-    axios.get(url).then((rsp) => {
-      let flist = [];
-      let noDataOption = _.filter(rsp.data.data.list, (o) => {
-        return (
-          (o.type.indexOf("select") > -1) |
-            (o.type.indexOf("checkbox") > -1) |
-            (o.type.indexOf("radio") > -1) && !o.optionArray
-        );
-      });
-      noDataOption.map((k) => {
-        flist.push({ name: k.name, optionArray: oparr });
-        return null;
-      });
-      setPatch(flist);
+    let flist = [];
+    let noDataOption = _.filter(formArray.list, (o) => {
+      return (
+        (o.type.indexOf("select") > -1) |
+          (o.type.indexOf("checkbox") > -1) |
+          (o.type.indexOf("radio") > -1) && !o.optionArray
+      );
     });
+    noDataOption.map((k) => {
+      flist.push({ name: k.name, optionArray: oparr });
+      return null;
+    });
+
+    setPatch(flist);
   };
   const aggre = () => {
     if (!setting1) return false;
@@ -379,10 +377,11 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
           <Col span={10}>
             <div>
               <AntFormDisplay
-                formArray={formdt["5f1a590712d3bf549d18e583"]}
+                formArray={formArray}
                 onValuesChange={onValuesChangeTable1}
                 patchlist={patch}
                 initialValues={initChart}
+                //changedInitial={initChart}
               />
             </div>
           </Col>
@@ -470,31 +469,23 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       </Form.Item>
     </Form>
   );
+  console.log("patch", patch);
   return (
     <>
       {edit ? (
         <>
-          <Tabs tabPosition={"left"}>
-            <TabPane tab="Author">
-              <>
-                <Title level={4}>Chart</Title>
-                <Divider style={{ marginTop: 0 }} />
-                <Tabs size="small">
-                  <TabPane tab="Chart" key="1">
-                    {chtonly}
-                  </TabPane>
-                  <TabPane tab="Table" key="2">
-                    {tbonly}
-                  </TabPane>
-                  <TabPane tab="Config" key="3">
-                    <div style={{ marginRight: 10 }}>{form1}</div>
-                  </TabPane>
-                </Tabs>
-              </>
+          <Title level={4}>Chart</Title>
+          <Divider style={{ marginTop: 0 }} />
+          <Tabs size="small">
+            <TabPane tab="Chart" key="1">
+              {chtonly}
             </TabPane>
-            {/* <TabPane tab="Data" key="2">
-                <Dataget onDataGet={onDataGet} dtsrc={dtsrc} />
-              </TabPane>  */}
+            <TabPane tab="Table" key="2">
+              {tbonly}
+            </TabPane>
+            <TabPane tab="Config" key="3">
+              <div style={{ marginRight: 10 }}>{form1}</div>
+            </TabPane>
           </Tabs>
         </>
       ) : (
