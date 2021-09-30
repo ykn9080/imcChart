@@ -4,7 +4,7 @@ import EasyChart from "./Chart/EasyChart";
 
 const App = () => {
   return (
-    <div style={{ flexGrow: 1 }}>
+    <div style={{ flexGrow: 1, margin: 10 }}>
       <EasyChart edit={true} authObj={sampledata} />
     </div>
   );

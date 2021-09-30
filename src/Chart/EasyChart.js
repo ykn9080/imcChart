@@ -56,7 +56,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     localStorage.removeItem("modelchart");
   }, []);
   useEffect(() => {
-    console.log(authObj);
     if (authObj) {
       setLoading(true);
       setData(authObj);
@@ -69,7 +68,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       }
       if (authObj.setting) {
         const ds = authObj.setting;
-        localStorage.setItem("modelchart", JSON.stringify(authObj));
+        //localStorage.setItem("modelchart", JSON.stringify(authObj));
         setSetting1(ds);
         setCharttypeopt(ds.charttype);
         //AntFormDisplay init
@@ -185,7 +184,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
 
   const onValuesChangeTable1 = (changedValues, allValues) => {
     //allValues = cleanupObj(changedValues, allValues);
-    let set2 = {};
+    let set2 = authObj;
     if (setting1) set2 = { ...setting1 };
     set2 = { ...set2, ...changedValues };
     set2 = CleanupObj(set2);
@@ -196,12 +195,11 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
         updateLocalStorage("modelchart", {});
       }, 0);
     }
-    console.log(changedValues);
     if (["title", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
       setSetting1(set2);
 
     //use localstorage to prevent state change
-    let local = {},
+    let local = authObj,
       local1 = localStorage.getItem("modelchart");
     if (local1) local = JSON.parse(local1);
     local.setting = { ...local.setting, ...changedValues };
@@ -291,7 +289,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
   };
 
   const onOptionClick = (opt) => {
-    console.log("here", opt);
     let optt = " ";
     let settingg = { ...setting1 };
     const chart1 = setting1.charttype;
@@ -398,7 +395,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     </div>
   );
   const updateLocalStorage = (title, updateObj) => {
-    let local,
+    let local = authObj,
       local1 = localStorage.getItem(title);
     if (local1) local = JSON.parse(local1);
     local.setting = { ...local.setting, ...updateObj };
@@ -431,7 +428,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
   );
 
   const onConfigFinish = (val) => {
-    // console.log(val);
     setChartOpt(val.textarea);
     updateLocalStorage("modelchart", { options: val.textarea });
     reloadChart();
@@ -469,7 +465,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       </Form.Item>
     </Form>
   );
-  console.log("patch", patch);
   return (
     <>
       {edit ? (
