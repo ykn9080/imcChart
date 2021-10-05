@@ -1,8 +1,8 @@
-# @ant-design/charts
+# imcChart
 
 <div align="center">
 
-A React chart library, based on [G2Plot](https://github.com/antvis/G2Plot), [G6](https://github.com/antvis/G6), X6, L7.
+A React chart library, based on [Ant Chart](https://github.com/antvis/G2Plot)
 
 ![build](https://github.com/ant-design/ant-design-charts/workflows/build/badge.svg)
 ![npm](https://img.shields.io/npm/v/@ant-design/charts)
@@ -10,26 +10,17 @@ A React chart library, based on [G2Plot](https://github.com/antvis/G2Plot), [G6]
 [![GitHub stars](https://img.shields.io/github/stars/ant-design/ant-design-charts)](https://github.com/ant-design/ant-design-charts/stargazers)
 [![npm License](https://img.shields.io/npm/l/@ant-design/charts.svg)](https://www.npmjs.com/package/@ant-design/charts)
 
-<p align="center">
-  <a href="https://charts.ant.design/">Website</a> •
-  <a href="https://charts.ant.design/guide/start">Quick Start</a> •
-  <a href="https://charts.ant.design/demos/global">Gallery</a> •
-  <a href="https://charts.ant.design/guide/faq">FAQ</a> •
-  <a href="https://www.yuque.com/antv/g2plot">Blog</a>
-</p>
-
 </div>
 
 <div align="center">
-<img src="https://gw.alipayobjects.com/mdn/rms_d314dd/afts/img/A*sXqrRrEwFRQAAAAAAAAAAABkARQnAQ" width="800"/>
+<img src="https://i.ibb.co/LP9mPFg/imcchart-edit.png" width="600">
 </div>
 
-[English](./README.md) | 한글
+English | [한글](./README-kr_KR.md)
 
 ## ✨ Features
 
 - Easy to use
-- TypeScript
 - Pretty & Lightweight
 - Responsive
 - Storytelling
@@ -37,100 +28,84 @@ A React chart library, based on [G2Plot](https://github.com/antvis/G2Plot), [G6]
 ## 📦 Installation
 
 ```bash | pure
-$ npm install @ant-design/charts
+$ npm install imcchart
 ```
 
 ## 🔨 Usage
 
 ```tsx | pure
 import React from "react";
-import { Line } from "@ant-design/charts";
+import EasyChart from "imcchart";
 
-const Page: React.FC = () => {
-  const data = [
-    { year: "1991", value: 3 },
-    { year: "1992", value: 4 },
-    { year: "1993", value: 3.5 },
-    { year: "1994", value: 5 },
-    { year: "1995", value: 4.9 },
-    { year: "1996", value: 6 },
-    { year: "1997", value: 7 },
-    { year: "1998", value: 9 },
-    { year: "1999", value: 13 },
-  ];
-
-  const config = {
-    data,
-    width: 800,
-    height: 400,
-    autoFit: false,
-    xField: "year",
-    yField: "value",
-    point: {
-      size: 5,
-      shape: "diamond",
+const ChartDemo = () => {
+  const sampledata = {
+    setting: {
+      title: "Sales by Country",
+      charttype: "column",
+      xField: "Country",
+      yField: "Sales",
+      aggregate: "sum",
+      series: "",
     },
-    label: {
-      style: {
-        fill: "#aaa",
+    dtlist: [
+      {
+        Country: "Canada",
+        Product: "Carretera",
+        UnitsSold: 1618.5,
+        ManufacturingPrice: 3,
+        SalePrice: 20,
+        GrossSales: 32370,
+        Sales: 32370,
       },
-    },
-  };
-
-  let chart;
-
-  // Export Image
-  const downloadImage = () => {
-    chart?.downloadImage();
-  };
-
-  // Get chart base64 string
-  const toDataURL = () => {
-    console.log(chart?.toDataURL());
+      {
+        Country: "Germany",
+        Product: "Carretera",
+        UnitsSold: 1321,
+        ManufacturingPrice: 3,
+        SalePrice: 20,
+        GrossSales: 26420,
+        Sales: 26420,
+      },
+      {
+        Country: "France",
+        Product: "Carretera",
+        UnitsSold: 2178,
+        ManufacturingPrice: 3,
+        SalePrice: 15,
+        GrossSales: 32670,
+        Sales: 32670,
+      },
+      {
+        Country: "Germany",
+        Product: "Carretera",
+        UnitsSold: 888,
+        ManufacturingPrice: 3,
+        SalePrice: 15,
+        GrossSales: 13320,
+        Sales: 13320,
+      },
+    ],
   };
 
   return (
     <div>
-      <button type="button" onClick={downloadImage} style={{ marginRight: 24 }}>
-        Export Image
-      </button>
-      <button type="button" onClick={toDataURL}>
-        Get base64
-      </button>
-      <Line {...config} onReady={(chartInstance) => (chart = chartInstance)} />
+      <EasyChart authObj={sampledata} showmenu={true} />
     </div>
   );
 };
 export default Page;
 ```
 
-Preview
-
-<img src="https://gw.alipayobjects.com/mdn/rms_d314dd/afts/img/A*xTY6QIQsWcwAAAAAAAAAAAAAARQnAQ" width="600">
+### ✨ [Demo](http://imcmaster.iptime.org:5009)
 
 ## 📜 Document & API
 
 See chart API for details. Common props:
 
-| Property        | Description           | Type                          | defaultValue |
-| --------------- | --------------------- | ----------------------------- | ------------ |
-| onReady         | chart loaded callback | (chart)=> void                | -            |
-| onEvent         | chart events          | (chart, event)=> void         | -            |
-| loading         | loading status        | boolean                       | -            |
-| loadingTemplate | loading template      | React.ReactElement            | -            |
-| errorTemplate   | custom error template | (e: Error) => React.ReactNode | -            |
-| className       | container class       | string                        | -            |
-| style           | container style       | React.CSSProperties           | -            |
-
-## 🤝 How to Contribute
-
-Your contributions are always welcome! Please Do have a look at the [issues](https://github.com/antvis/g2plot/issues) first.
-
-## 📧 Contact us
-
-DingTalk group number: `30233731`.
-
-<img src="https://user-images.githubusercontent.com/31396322/129695490-21b57756-9bee-4ddf-93bc-0fa8e3bf10fa.png" width="200" height="266" />
+| Property | Description          | Type      | defaultValue |
+| -------- | -------------------- | --------- | ------------ |
+| showmenu | edit or display      | boolean   |              |
+| authObj  | chart data & setting | json data |              |
 
 ## License
 
