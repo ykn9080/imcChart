@@ -20,10 +20,9 @@ English | [한글](./README-kr_KR.md)
 
 ## ✨ Features
 
-- Easy to use
-- Pretty & Lightweight
-- Responsive
-- Storytelling
+- Easy to integrate
+- Provide editing tool
+- Only Json data
 
 ## 📦 Installation
 

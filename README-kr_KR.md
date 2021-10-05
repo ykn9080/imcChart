@@ -20,10 +20,9 @@ English | [한글](./README-kr_KR.md)
 
 ## ✨ Features
 
-- Easy to use
-- Pretty & Lightweight
-- Responsive
-- Storytelling
+- 통합이 용이: 다른 프로그램에 쉽게 통합됨
+- 편집툴: 자체 편집툴을 사용해서 차트를 생성할 수 있음.
+- Json Data: Json데이터를 입력하면 다양한 차트표현이 가능
 
 ## 📦 Installation
 
@@ -104,8 +103,8 @@ See chart API for details. Common props:
 
 | Property | Description          | Type      | defaultValue |
 | -------- | -------------------- | --------- | ------------ |
-| showmenu | edit or display      | boolean   |              |
-| authObj  | chart data & setting | json data |              |
+| showmenu | 편집 또는 디스플레이 | boolean   |              |
+| authObj  | 차트데이터와 스타일  | json data |              |
 
 ## License
 
