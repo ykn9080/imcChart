@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import "./components/Common/Antd.css";
-import axios from "axios";
 import {
   Typography,
   Row,
@@ -14,6 +13,9 @@ import {
   Form,
   Tooltip,
   Spin,
+  PageHeader,
+  Modal,
+  message,
 } from "antd";
 import { RedoOutlined } from "@ant-design/icons";
 import AntFormDisplay from "imcformbuilder";
@@ -37,9 +39,12 @@ const { TabPane } = Tabs;
 const { TextArea } = Input;
 const formArray = formdt["5f1a590712d3bf549d18e583"];
 
-const EasyChart = ({ authObj, edit }) => {
+const EasyChart = ({ authObj, edit, showmenu }) => {
   const [form] = Form.useForm();
-
+  const [auth, setAuth] = useState(authObj);
+  const [visible, setVisible] = useState(false);
+  const [menu, setMenu] = useState(showmenu);
+  const [editt, setEditt] = useState(edit);
   const [nodelist, setNodelist] = useState();
   const [filterlist, setFilterlist] = useState();
   const [setting1, setSetting1] = useState();
@@ -53,18 +58,19 @@ const EasyChart = ({ authObj, edit }) => {
   useEffect(() => {
     localStorage.removeItem("modelchart");
   }, []);
+
   useEffect(() => {
-    if (authObj) {
+    if (auth) {
       setLoading(true);
-      if (authObj.dtlist) {
-        setNodelist(authObj.dtlist);
+      if (auth.dtlist) {
+        setNodelist(auth.dtlist);
         aggre();
 
         //AntFormDisplay dropdown patchlist make
-        if (authObj.dtlist.length > 0) makeOptionArray(authObj.dtlist[0]);
+        if (auth.dtlist.length > 0) makeOptionArray(auth.dtlist[0]);
       }
-      if (authObj.setting) {
-        const ds = authObj.setting;
+      if (auth.setting) {
+        const ds = auth.setting;
         //localStorage.setItem("modelchart", JSON.stringify(authObj));
         setSetting1(ds);
         setCharttypeopt(ds.charttype);
@@ -93,7 +99,7 @@ const EasyChart = ({ authObj, edit }) => {
       }
       setLoading(false);
     }
-  }, [authObj]);
+  }, [auth]);
   const orderByX = (data, xfield) => {
     return _.sortBy(data, xfield);
   };
@@ -176,7 +182,7 @@ const EasyChart = ({ authObj, edit }) => {
   };
 
   const onValuesChangeTable1 = (changedValues, allValues) => {
-    let set2 = authObj;
+    let set2 = auth;
     if (setting1) set2 = { ...setting1 };
     set2 = { ...set2, ...changedValues };
     set2 = CleanupObj(set2);
@@ -187,11 +193,13 @@ const EasyChart = ({ authObj, edit }) => {
         updateLocalStorage("modelchart", {});
       }, 0);
     }
-    if (["title", "desc"].indexOf(Object.keys(changedValues)[0]) === -1)
+    if (["title", "desc"].indexOf(Object.keys(changedValues)[0]) === -1) {
       setSetting1(set2);
+      setInitChart(set2);
+    }
 
     //use localstorage to prevent state change
-    let local = authObj,
+    let local = auth,
       local1 = localStorage.getItem("modelchart");
     if (local1) local = JSON.parse(local1);
     local.setting = { ...local.setting, ...changedValues };
@@ -304,17 +312,41 @@ const EasyChart = ({ authObj, edit }) => {
       });
     }, 100);
   };
-
+  const copyClipboard = () => {
+    navigator.clipboard.writeText(JSON.stringify(auth, null, 4));
+    message.info("Copied to clipboard");
+  };
+  const modal = (
+    <Modal
+      visible={visible}
+      title="Code"
+      onCancel={() => setVisible(false)}
+      footer={[
+        <Tooltip title="Copy code to clipboard">
+          <Button key="copy" onClick={copyClipboard}>
+            Copy
+          </Button>
+        </Tooltip>,
+        <Button key="submit" type="primary" onClick={() => setVisible(false)}>
+          Close
+        </Button>,
+      ]}
+    >
+      <div style={{ overflowY: "scroll", height: 250 }}>
+        {JSON.stringify(auth, null, 4)}
+      </div>
+    </Modal>
+  );
   const chtonly = (
     <div id="dvCht">
       <Row gutter={4}>
-        <Col span={edit ? 14 : 24}>
+        <Col span={editt ? 14 : 24}>
           <div
             style={{
               margin: 20,
             }}
           >
-            {edit && (
+            {editt && (
               <div style={{ textAlign: "right" }}>
                 <Tooltip title="Reload Chart">
                   <Button
@@ -356,7 +388,7 @@ const EasyChart = ({ authObj, edit }) => {
               })()}
           </div>
         </Col>
-        {edit && (
+        {editt && (
           <Col span={10}>
             <div>
               <AntFormDisplay
@@ -364,14 +396,13 @@ const EasyChart = ({ authObj, edit }) => {
                 onValuesChange={onValuesChangeTable1}
                 patchlist={patch}
                 initialValues={initChart}
-                //changedInitial={initChart}
               />
             </div>
           </Col>
         )}
       </Row>
 
-      {edit && setting1 && setting1.charttype && (
+      {editt && setting1 && setting1.charttype && (
         <ChartOption
           type={charttypeopt}
           config={chartOrigin()}
@@ -381,7 +412,7 @@ const EasyChart = ({ authObj, edit }) => {
     </div>
   );
   const updateLocalStorage = (title, updateObj) => {
-    let local = authObj,
+    let local = auth,
       local1 = localStorage.getItem(title);
     if (local1) local = JSON.parse(local1);
     local.setting = { ...local.setting, ...updateObj };
@@ -418,7 +449,37 @@ const EasyChart = ({ authObj, edit }) => {
     updateLocalStorage("modelchart", { options: val.textarea });
     reloadChart();
   };
+  const onSave = () => {
+    let local = auth,
+      local1 = localStorage.getItem("modelchart");
+    if (local1) {
+      local = JSON.parse(local1);
+      setAuth(local);
+    }
+    setEditt(false);
+  };
 
+  const editForm = (
+    <div style={{ textAlign: "right" }}>
+      <Button
+        type="link"
+        onClick={() => {
+          setVisible(true);
+        }}
+      >
+        code
+      </Button>
+      <Button
+        type="link"
+        onClick={() => {
+          setEditt(!editt);
+          setInitChart(auth.setting);
+        }}
+      >
+        edit
+      </Button>
+    </div>
+  );
   const form1 = (
     <Form
       layout="vertical"
@@ -449,9 +510,19 @@ const EasyChart = ({ authObj, edit }) => {
   );
   return (
     <>
-      {edit ? (
+      {editt ? (
         <>
-          <Title level={4}>Chart</Title>
+          <PageHeader
+            title="Chart"
+            extra={[
+              <Button key="1" onClick={() => setEditt(false)}>
+                Cancel
+              </Button>,
+              <Button key="2" onClick={onSave}>
+                Save
+              </Button>,
+            ]}
+          />
           <Divider style={{ marginTop: 0 }} />
           <Tabs size="small">
             <TabPane tab="Chart" key="1">
@@ -466,8 +537,12 @@ const EasyChart = ({ authObj, edit }) => {
           </Tabs>
         </>
       ) : (
-        <div style={{ marginTop: 100 }}>{chtonly}</div>
+        <>
+          {menu && editForm}
+          <div style={{ marginTop: 100 }}>{chtonly}</div>
+        </>
       )}
+      {modal}
       <DarkBackground disappear={loading}>
         <div style={{ position: "absolute", top: 200, left: "50%" }}>
           <Spin spinning={loading} />

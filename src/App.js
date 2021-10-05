@@ -5,7 +5,7 @@ import EasyChart from "./Chart/EasyChart";
 const App = () => {
   return (
     <div style={{ flexGrow: 1, margin: 10 }}>
-      <EasyChart edit={true} authObj={sampledata} />
+      <EasyChart edit={false} authObj={sampledata} showmenu={true} />
     </div>
   );
 };
@@ -13,9 +13,6 @@ const App = () => {
 export default App;
 
 const sampledata = {
-  checked: true,
-  h: 22,
-  i: "4",
   setting: {
     title: "Sales by Country",
     charttype: "pie",
@@ -24,10 +21,6 @@ const sampledata = {
     aggregate: "sum",
     series: "",
   },
-  type: "chart",
-  w: 6,
-  x: 6,
-  y: 22,
   dtlist: [
     {
       Country: "Canada",
