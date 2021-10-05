@@ -24,7 +24,7 @@ A React chart library, based on [G2Plot](https://github.com/antvis/G2Plot), [G6]
 <img src="https://gw.alipayobjects.com/mdn/rms_d314dd/afts/img/A*sXqrRrEwFRQAAAAAAAAAAABkARQnAQ" width="800"/>
 </div>
 
-English | [한글](./README-kr_KR.md)
+[English](./README.md) | 한글
 
 ## ✨ Features
 

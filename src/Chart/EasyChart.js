@@ -37,18 +37,16 @@ const { TabPane } = Tabs;
 const { TextArea } = Input;
 const formArray = formdt["5f1a590712d3bf549d18e583"];
 
-const EasyChart = ({ authObj, edit, errorurl }) => {
+const EasyChart = ({ authObj, edit }) => {
   const [form] = Form.useForm();
 
-  const [data, setData] = useState();
-  const [dtsrc, setDtsrc] = useState();
   const [nodelist, setNodelist] = useState();
   const [filterlist, setFilterlist] = useState();
   const [setting1, setSetting1] = useState();
   const [patch, setPatch] = useState();
   const [initChart, setInitChart] = useState();
   const [config, setConfig] = useState();
-  const [chartOpt, setChartOpt] = useState("");
+  //const [chartOpt, setChartOpt] = useState("");
   const [charttypeopt, setCharttypeopt] = useState();
   const [loading, setLoading] = useState(false);
 
@@ -58,7 +56,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
   useEffect(() => {
     if (authObj) {
       setLoading(true);
-      setData(authObj);
       if (authObj.dtlist) {
         setNodelist(authObj.dtlist);
         aggre();
@@ -81,12 +78,11 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
         if (ds.result) {
           src.result = orderByX(ds.result, ds.xField);
         }
-        setDtsrc(src);
 
         //config textarea init
         if (ds.options) {
           const optt = JSON.stringify(ds.options, null, 4);
-          setChartOpt(optt);
+          //setChartOpt(optt);
 
           form.setFieldsValue({
             textarea: optt,
@@ -95,13 +91,8 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
       } else {
         setInitChart({});
       }
-      if (authObj.dtsrc) setDtsrc(authObj.dtsrc);
       setLoading(false);
     }
-    //if (setting1 && setting1.value && setting1.charttype) chartchart(setting1);
-    // setTimeout(() => {
-    //   $(".ant-row.ant-form-item").css("margin-bottom", 1);
-    // }, 500);
   }, [authObj]);
   const orderByX = (data, xfield) => {
     return _.sortBy(data, xfield);
@@ -155,7 +146,8 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
         // val.map((v, i) => {
         let sum = _.sumBy(listbyx, val);
         //if (typeof sum !== "int") sum = sum.toFixed(2);
-        let avg = _.meanBy(listbyx, val).toFixed(2);
+        let avg = _.meanBy(listbyx, val);
+        avg = Math.floor(avg * 100) / 100;
         let count = listbyx.length;
 
         switch (setting1.aggregate) {
@@ -163,7 +155,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
             obj[val] = sum;
             break;
           case "average":
-            obj[val] = avg; //parseFloat(sum / count);
+            obj[val] = avg;
             break;
           case "count":
             obj[val] = count;
@@ -180,10 +172,10 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     //setNodelist(listx);
 
     chartchart(setting1, listx);
+    setInitChart(setting1.setting); //initialValues
   };
 
   const onValuesChangeTable1 = (changedValues, allValues) => {
-    //allValues = cleanupObj(changedValues, allValues);
     let set2 = authObj;
     if (setting1) set2 = { ...setting1 };
     set2 = { ...set2, ...changedValues };
@@ -282,12 +274,6 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     if (val) setConfig(conf);
   };
 
-  const onDataGet = (val) => {
-    setFilterlist(val);
-    setNodelist(val);
-    if (val.length > 0) makeOptionArray(val[0]);
-  };
-
   const onOptionClick = (opt) => {
     let optt = " ";
     let settingg = { ...setting1 };
@@ -299,7 +285,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     form.setFieldsValue({
       textarea: optt,
     });
-    setChartOpt(optt);
+    //setChartOpt(optt);
     updateLocalStorage("modelchart", { options: opt });
     setConfig({ ...chartOrigin(), ...opt });
     setTimeout(function () {
@@ -311,7 +297,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
     setSetting1({ ...setting1, charttype: null });
     setTimeout(function () {
       setSetting1({ ...setting1, charttype: chart1 });
-      setChartOpt("");
+      //setChartOpt("");
       updateLocalStorage("modelchart", {});
       form.setFieldsValue({
         textarea: "",
@@ -428,14 +414,10 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
   );
 
   const onConfigFinish = (val) => {
-    setChartOpt(val.textarea);
+    //setChartOpt(val.textarea);
     updateLocalStorage("modelchart", { options: val.textarea });
     reloadChart();
   };
-  // const onReset = () => {
-  //   form.resetFields();
-  //   setChartOpt("");
-  // };
 
   const form1 = (
     <Form
@@ -452,7 +434,7 @@ const EasyChart = ({ authObj, edit, errorurl }) => {
           htmlType="button"
           onClick={() => {
             form.resetFields();
-            setChartOpt("");
+            //setChartOpt("");
 
             updateLocalStorage("modelchart", {});
           }}
