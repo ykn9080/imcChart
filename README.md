@@ -101,10 +101,11 @@ export default Page;
 
 See chart API for details. Common props:
 
-| Property | Description          | Type      | defaultValue |
-| -------- | -------------------- | --------- | ------------ |
-| showmenu | edit or display      | boolean   |              |
-| authObj  | chart data & setting | json data |              |
+| Property | Description                   | Type                    | defaultValue |
+| -------- | ----------------------------- | ----------------------- | ------------ |
+| showmenu | edit or display               | boolean                 |              |
+| authObj  | chart data & setting          | json data               |              |
+| onChange | return changed data from edit | (val)=>console.log(val) |              |
 
 ## License
 

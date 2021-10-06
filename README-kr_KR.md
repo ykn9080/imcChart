@@ -101,10 +101,11 @@ export default Page;
 
 See chart API for details. Common props:
 
-| Property | Description          | Type      | defaultValue |
-| -------- | -------------------- | --------- | ------------ |
-| showmenu | 편집 또는 디스플레이 | boolean   |              |
-| authObj  | 차트데이터와 스타일  | json data |              |
+| Property | Description              | Type                    | defaultValue |
+| -------- | ------------------------ | ----------------------- | ------------ |
+| showmenu | 편집 또는 디스플레이     | boolean                 |              |
+| authObj  | 차트데이터와 스타일      | json data               |              |
+| onChange | 편집, 수정된 데이터 리턴 | (val)=>console.log(val) |              |
 
 ## License
 

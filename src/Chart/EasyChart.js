@@ -17,7 +17,11 @@ import {
   Modal,
   message,
 } from "antd";
-import { RedoOutlined } from "@ant-design/icons";
+import {
+  RedoOutlined,
+  SaveOutlined,
+  CloseSquareOutlined,
+} from "@ant-design/icons";
 import AntFormDisplay from "imcformbuilder";
 import formdt from "./AntFormDisplay.json";
 // import Dataget from "Model/Author/Dataget";
@@ -39,7 +43,7 @@ const { TabPane } = Tabs;
 const { TextArea } = Input;
 const formArray = formdt["5f1a590712d3bf549d18e583"];
 
-const EasyChart = ({ authObj, edit, showmenu }) => {
+const EasyChart = ({ authObj, showmenu, onChange }) => {
   const [form] = Form.useForm();
   const [auth, setAuth] = useState(authObj);
   const [visible, setVisible] = useState(false);
@@ -455,6 +459,7 @@ const EasyChart = ({ authObj, edit, showmenu }) => {
     if (local1) {
       local = JSON.parse(local1);
       setAuth(local);
+      if (onChange) onChange(local);
     }
     setEditt(false);
   };
@@ -515,12 +520,18 @@ const EasyChart = ({ authObj, edit, showmenu }) => {
           <PageHeader
             title="Chart"
             extra={[
-              <Button key="1" onClick={() => setEditt(false)}>
-                Cancel
-              </Button>,
-              <Button key="2" onClick={onSave}>
-                Save
-              </Button>,
+              <Button
+                key="1"
+                type="text"
+                icon={<FaCheck />}
+                onClick={onSave}
+              />,
+              <Button
+                key="2"
+                type="text"
+                icon={<ImCross />}
+                onClick={() => setEditt(false)}
+              />,
             ]}
           />
           <Divider style={{ marginTop: 0 }} />
