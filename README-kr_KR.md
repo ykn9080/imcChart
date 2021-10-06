@@ -107,6 +107,21 @@ See chart API for details. Common props:
 | authObj  | 차트데이터와 스타일      | json data               |              |
 | onChange | 편집, 수정된 데이터 리턴 | (val)=>console.log(val) |              |
 
+## ⌨️ Development
+
+https://github.com/ykn9080/imcChart
+
+로컬로 클론해서 수정:
+
+```bash
+$ git clone git@github.com:ykn9080/imcchart.git
+$ cd imcchart
+$ npm install
+$ npm start
+```
+
+Open your browser and visit http://127.0.0.1:5009
+
 ## License
 
 MIT

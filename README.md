@@ -107,6 +107,21 @@ See chart API for details. Common props:
 | authObj  | chart data & setting          | json data               |              |
 | onChange | return changed data from edit | (val)=>console.log(val) |              |
 
+## ⌨️ Development
+
+https://github.com/ykn9080/imcChart
+
+Or clone locally:
+
+```bash
+$ git clone git@github.com:ykn9080/imcchart.git
+$ cd imcchart
+$ npm install
+$ npm start
+```
+
+Open your browser and visit http://127.0.0.1:5009
+
 ## License
 
 MIT
