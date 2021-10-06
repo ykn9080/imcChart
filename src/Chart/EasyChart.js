@@ -17,11 +17,9 @@ import {
   Modal,
   message,
 } from "antd";
-import {
-  RedoOutlined,
-  SaveOutlined,
-  CloseSquareOutlined,
-} from "@ant-design/icons";
+import { RedoOutlined } from "@ant-design/icons";
+import { FaCheck } from "react-icons/fa";
+import { ImCross } from "react-icons/im";
 import AntFormDisplay from "imcformbuilder";
 import formdt from "./AntFormDisplay.json";
 // import Dataget from "Model/Author/Dataget";
@@ -48,7 +46,7 @@ const EasyChart = ({ authObj, showmenu, onChange }) => {
   const [auth, setAuth] = useState(authObj);
   const [visible, setVisible] = useState(false);
   const [menu, setMenu] = useState(showmenu);
-  const [editt, setEditt] = useState(edit);
+  const [editt, setEditt] = useState(false);
   const [nodelist, setNodelist] = useState();
   const [filterlist, setFilterlist] = useState();
   const [setting1, setSetting1] = useState();
