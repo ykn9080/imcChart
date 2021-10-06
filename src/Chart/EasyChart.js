@@ -41,12 +41,12 @@ const { TabPane } = Tabs;
 const { TextArea } = Input;
 const formArray = formdt["5f1a590712d3bf549d18e583"];
 
-const EasyChart = ({ authObj, showmenu, onChange }) => {
+const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
   const [form] = Form.useForm();
   const [auth, setAuth] = useState(authObj);
   const [visible, setVisible] = useState(false);
   const [menu, setMenu] = useState(showmenu);
-  const [editt, setEditt] = useState(false);
+  const [editt, setEditt] = useState();
   const [nodelist, setNodelist] = useState();
   const [filterlist, setFilterlist] = useState();
   const [setting1, setSetting1] = useState();
@@ -58,7 +58,9 @@ const EasyChart = ({ authObj, showmenu, onChange }) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    localStorage.removeItem("modelchart");
+    localStorage.setItem("modelchart", JSON.stringify(authObj));
+    if (!edit) setEditt(false);
+    else setEditt(edit);
   }, []);
 
   useEffect(() => {
@@ -517,20 +519,22 @@ const EasyChart = ({ authObj, showmenu, onChange }) => {
         <>
           <PageHeader
             title="Chart"
-            extra={[
-              <Button
-                key="1"
-                type="text"
-                icon={<FaCheck />}
-                onClick={onSave}
-              />,
-              <Button
-                key="2"
-                type="text"
-                icon={<ImCross />}
-                onClick={() => setEditt(false)}
-              />,
-            ]}
+            extra={
+              showmenu && [
+                <Button
+                  key="1"
+                  type="text"
+                  icon={<FaCheck />}
+                  onClick={onSave}
+                />,
+                <Button
+                  key="2"
+                  type="text"
+                  icon={<ImCross />}
+                  onClick={() => setEditt(false)}
+                />,
+              ]
+            }
           />
           <Divider style={{ marginTop: 0 }} />
           <Tabs size="small">
