@@ -13,7 +13,7 @@ A React chart library, based on [Ant Chart](https://github.com/antvis/G2Plot)
 </div>
 
 <div align="center">
-<img src="https://i.ibb.co/LP9mPFg/imcchart-edit.png" width="600">
+<img src="https://i.ibb.co/LP9mPFg/imcchart-edit.png" width="600"/>
 </div>
 
 English | [한글](./README-kr_KR.md)
