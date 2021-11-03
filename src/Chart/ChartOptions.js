@@ -68,7 +68,9 @@ const ChartOption = (props) => {
   );
 };
 const FindChart = (type, config, option) => {
-  if (!(config?.data && config.data.length > 0)) return null;
+  if (!config) return null;
+
+  if (!(config.data && config.data.length > 0)) return null;
   let originfig = {
     data: config.data,
     xField: config.xField,

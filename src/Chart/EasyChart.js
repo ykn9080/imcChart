@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import _ from "lodash";
 import "./components/Common/Antd.css";
 import {
-  Typography,
   Row,
   Col,
   Tabs,
@@ -31,12 +30,9 @@ import BoxPlot from "./ChartTools/antv/BoxPlot";
 import ScatterPlot from "./ChartTools/antv/ScatterPlot";
 import MatrixDiagram from "./ChartTools/antv/MatrixDiagram";
 import AreaChart from "./ChartTools/antv/AreaChart";
-import Treemap from "./ChartTools/d3/Treemap";
-import treemapdata from "./ChartTools/d3/treemapData";
 import ChartOption from "./ChartOptions";
 import styled, { css } from "styled-components";
 
-const { Title } = Typography;
 const { TabPane } = Tabs;
 const { TextArea } = Input;
 const formArray = formdt["5f1a590712d3bf549d18e583"];
@@ -213,7 +209,8 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
   // chart Data conversion
   const chartOrigin = (allValues) => {
     //if (allValues) setting1 = allValues;
-    if (!(setting1 && setting1?.yField)) return false;
+    if (!setting1) return false;
+    if (!(setting1 && setting1.yField)) return false;
     const x = setting1.xField;
     const val = setting1.yField;
     let newlist1 = filterlist;
@@ -382,10 +379,6 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
                   case "matrixdiagram":
                     return <MatrixDiagram />;
 
-                  case "treemap":
-                    return (
-                      <Treemap data={treemapdata} width={600} height={400} />
-                    );
                   default:
                     return null;
                 }
