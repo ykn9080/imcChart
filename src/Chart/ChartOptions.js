@@ -88,8 +88,9 @@ const FindChart = (type, config, option) => {
     return null;
   });
 
-  originfig = { ...originfig, height: 90, autoFit: true, ...option };
+  originfig = { ...originfig, ...option, height: 100 };
   originfig = CleanupObj(originfig);
+  console.log(originfig);
   switch (type) {
     case "pie":
       return <PieChart config={originfig} />;

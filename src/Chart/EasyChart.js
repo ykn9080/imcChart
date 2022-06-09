@@ -338,26 +338,37 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
       </div>
     </Modal>
   );
+
   const chtonly = (
-    <div id="dvCht">
-      <Row gutter={4}>
-        <Col span={editt ? 14 : 24}>
+    <>
+      <div id="dvCht" className="chartgrid">
+        {/* <Row gutter={4}>
+        <Col span={editt ? 14 : 24}> */}
+        <div>
+          {editt && (
+            <div style={{ textAlign: "right" }}>
+              <Tooltip title="Reload Chart">
+                <Button
+                  type="link"
+                  icon={<RedoOutlined />}
+                  onClick={reloadChart}
+                />
+              </Tooltip>
+            </div>
+          )}
           <div
-            style={{
-              margin: 20,
-            }}
+            style={
+              !editt
+                ? {
+                    position: "absolute",
+                    top: 10,
+                    left: 10,
+                    width: "95%",
+                    height: "95%",
+                  }
+                : {}
+            }
           >
-            {editt && (
-              <div style={{ textAlign: "right" }}>
-                <Tooltip title="Reload Chart">
-                  <Button
-                    type="link"
-                    icon={<RedoOutlined />}
-                    onClick={reloadChart}
-                  />
-                </Tooltip>
-              </div>
-            )}
             {setting1 &&
               config &&
               (() => {
@@ -384,29 +395,32 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
                 }
               })()}
           </div>
-        </Col>
+        </div>
+        {/* </Col> */}
         {editt && (
-          <Col span={10}>
-            <div>
-              <AntFormDisplay
-                formArray={formArray}
-                onValuesChange={onValuesChangeTable1}
-                patchlist={patch}
-                initialValues={initChart}
-              />
-            </div>
-          </Col>
+          // <Col span={10}>
+          <div>
+            <AntFormDisplay
+              formArray={formArray}
+              onValuesChange={onValuesChangeTable1}
+              patchlist={patch}
+              initialValues={initChart}
+            />
+          </div>
+          // </Col>
         )}
-      </Row>
-
+        {/* </Row> */}
+      </div>
       {editt && setting1 && setting1.charttype && (
-        <ChartOption
-          type={charttypeopt}
-          config={chartOrigin()}
-          onOptionClick={onOptionClick}
-        />
+        <div style={{ height: 250 }}>
+          <ChartOption
+            type={charttypeopt}
+            config={chartOrigin()}
+            onOptionClick={onOptionClick}
+          />
+        </div>
       )}
-    </div>
+    </>
   );
   const updateLocalStorage = (title, updateObj) => {
     let local = auth,
@@ -458,7 +472,7 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
   };
 
   const editForm = (
-    <div style={{ textAlign: "right" }}>
+    <div style={{ zIndex: 1000, textAlign: "right" }}>
       <Button
         type="link"
         onClick={() => {
@@ -545,7 +559,7 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
       ) : (
         <>
           {menu && editForm}
-          <div style={{ marginTop: 100 }}>{chtonly}</div>
+          <div style={{ marginTop: 10 }}>{chtonly}</div>
         </>
       )}
       {modal}

@@ -30,3 +30,8 @@ code {
 .navbar-fixed-bottom .p {
   margin: 2px 0 2px;
 }
+.chartgrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-gap: 10px;
+}
