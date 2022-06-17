@@ -1,5 +1,5 @@
 import React from "react";
-import { Area } from "@ant-design/charts";
+import { Area } from "@ant-design/plots";
 
 var data = [
   {
@@ -111,8 +111,8 @@ var data = [
 
 const AreaBox = (props) => {
   var config = {
-    // height: 400,
     data: data,
+    autoFit: true,
     xField: "name",
     yField: "value",
     seriesField: "nodeset",
@@ -139,12 +139,11 @@ const AreaBox = (props) => {
   if (props.config) {
     config = { ...config, ...props.config };
   }
+  console.log(config);
   return (
-    <>
-      <div>
-        <Area {...config} />
-      </div>
-    </>
+
+      <Area {...config} />
+
   );
 };
 export default AreaBox;

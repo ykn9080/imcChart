@@ -3,7 +3,7 @@ import _ from "lodash";
 import "./components/Common/Antd.css";
 import {
   Row,
-  Col,
+  Skeleton,
   Tabs,
   Divider,
   Table,
@@ -342,8 +342,6 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
   const chtonly = (
     <>
       <div id="dvCht" className="chartgrid">
-        {/* <Row gutter={4}>
-        <Col span={editt ? 14 : 24}> */}
         <div>
           {editt && (
             <div style={{ textAlign: "right" }}>
@@ -361,10 +359,11 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
               !editt
                 ? {
                     position: "absolute",
-                    top: 10,
-                    left: 10,
+                    top: 50,
+                    left: 20,
+                    bottom: 10,
                     width: "95%",
-                    height: "95%",
+                    height: "82%",
                   }
                 : {}
             }
@@ -389,16 +388,15 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
                     return <ScatterPlot config={config} />;
                   case "matrixdiagram":
                     return <MatrixDiagram />;
-
                   default:
-                    return null;
+                    return (
+                      <Skeleton size="large" avatar paragraph={{ rows: 8 }} />
+                    );
                 }
               })()}
           </div>
         </div>
-        {/* </Col> */}
         {editt && (
-          // <Col span={10}>
           <div>
             <AntFormDisplay
               formArray={formArray}
@@ -407,9 +405,7 @@ const EasyChart = ({ authObj, showmenu, edit, onChange }) => {
               initialValues={initChart}
             />
           </div>
-          // </Col>
         )}
-        {/* </Row> */}
       </div>
       {editt && setting1 && setting1.charttype && (
         <div style={{ height: 250 }}>

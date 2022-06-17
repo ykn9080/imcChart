@@ -13,19 +13,22 @@ let data = [
   { title: "테스트7", value: 38 },
   { title: "테스트8", value: 38 },
 ];
-let conf = {
-  height: 400,
-  data: data,
-  xField: "title",
-  yField: "value",
-};
-const BarChart = (props) => {
-  const [config, setConfig] = useState();
-  useEffect(() => {
-    conf = { ...conf, ...props.config };
-    setConfig(conf);
-  }, [props.config]);
 
-  return <>{config && <Bar {...config} />}</>;
+const BarChart = (props) => {
+  let config = {
+    // height: 400,
+    data: data,
+    xField: "title",
+    yField: "value",
+  };
+  // const [config, setConfig] = useState();
+  // useEffect(() => {
+  //   conf = { ...conf, ...props.config };
+  //   setConfig(conf);
+  // }, [props.config]);
+  if (props.config) {
+    config = { ...config, ...props.config };
+  }
+  return config ? <Bar {...config} /> : null
 };
 export default BarChart;
